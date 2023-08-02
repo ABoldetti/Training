@@ -1,0 +1,22 @@
+per lavorare con le stringhe trasformala in una lista e poi puoi lavorarci
+.Join lavora con le stringhe, prima convertire tutto in stringa e poi usare Join
+
+.sort riordina l'oggetto specifico      sorted ti copia l'oggetto e te lo riordina
+
+.upper fa una copia della stringa
+
+Per stampare i primi n elementi di una lista/array/dizionario/ cazzafa: Nomearray[:n]
+
+Nei cicli non si devono mettere necessariamente numeri. con una lista si può fare un ciclo del tipo
+for item in NomeLista  (l'operatore 'in' permette di controllare se qualcosa è nella stringa)
+
+Per creare una nuova pagina, "from tkinter import *"
+
+Per importare funzioni da file diversi, "import [nome file]"
+
+Pandas
+Per selezionare una colonna di un dataset, [nome dataset].[nome colonna]
+Se si fa [dataset].describe, si fa avg, stdev,min,max,ecc
+
+Numpy
+Per inserire i valori in un np.array, a=np.array=([0,1,2,3,4])
