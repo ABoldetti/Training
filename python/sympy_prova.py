@@ -6,44 +6,39 @@ def insert( a: bool) -> list:
     vector = list()
     while ausy !='' :
         if a:
-            ausy = input( 'Inserire le variabili nell equazione\t' )
+            ausy = input( 'Inserire le variabili nell equazione una alla volta, non inserire nulla per fermare il ciclo\t' )
         else:
-            ausy = input( 'Inserire le costanti nell equazione\t' )
+            ausy = input( 'Inserire le costanti nell equazione una alla volta, non inserire nulla per fermare il ciclo\t' )
         vector.append( ausy )
     string = ' '.join( vector )
     vector = symbols( string )
     return vector
 
 
-def propagazione_dell_errore(variables, formula, sigmas) -> str:
+def derivazione(variables, formula, sigmas) -> str:
     exp = 0
     for i in range( len( variables ) ):
         exp += (diff( formula, variables[i]))**2 * sigmas[i]**2
     final=latex(simplify(sqrt(exp)))
     print (final)
     string = f"""${final}$"""
+    plt.title(string)
+    plt.show
     return string
 
-variables=list()
-sigmas=list()
-constants=list()
-ausy = 'a'
+def propagazione_errore () -> str:
+    sigmas=list()
 
-variables = insert(True)
-constants = insert(False)
+    variables = insert(1)
+    constants = insert(0)
 
-#creation of sigmas
-for ausy in variables:
-    sigmas.append( f"""sigma_{ausy}""" )
-sigmastring = ' '.join( sigmas )
-sigmas = symbols( sigmastring )
+    #creation of sigmas
+    for ausy in variables:
+        sigmas.append( f"""sigma_{ausy}""" )
+    sigmastring = ' '.join( sigmas )
+    sigmas = symbols( sigmastring )
 
-while ausy != 'no':
     formula = input( 'Inserire formula per la propagazione dell errore per intero seguendo la sintassi di python\t' )
-    string = propagazione_dell_errore (variables, formula, sigmas)
-    plt.title(string)
-    plt.show()
-    ausy = input( 'Vuoi continuare inserendo un altra formula? (inserire no per terminare)')
+    return derivazione (variables, formula, sigmas)
 
-
-
+propagazione_errore()
