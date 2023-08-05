@@ -11,7 +11,7 @@ def get_input():
 
 window=Tk()
 button=Button(text="peppo",command=get_input, bg="Lightgrey")
-button.pack()
+button.pack(side=LEFT)
 
 entry=Entry(window)
 entry.pack()
