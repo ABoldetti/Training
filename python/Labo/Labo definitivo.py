@@ -46,9 +46,12 @@ class labo:
         a = i.interpolazione( x , y , sy )
         b = a.Lineare()
         A = b.get("A value")
+        sA = b.get("A error")
         B = b.get("B value")
+        sB = b.get("B error")
         chi = np.sum( np.power( ( ( y - A * x - B ) / sy) , 2))
-        ss.chi2.cdf( chi, np.size(x)-2)
+        plt.title( f"""$\chi:{chi}$
+                $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$""")
         self.linear_regression( x , y , sy, A , B )
 
     def three_column( self ):
@@ -59,9 +62,14 @@ class labo:
         a = i.interpolazione( x , y , sy )
         b = a.Pesata()
         A = b.get("A value")
+        sA = b.get("A error")
         B = b.get("B value")
+        sB = b.get("B error")
+        sAB = b.get("coveriant")
         chi = np.sum( ((y-A*x-B )/sy)**2)
-        ss.chi2.cdf( chi, np.size(x)-2)
+        plt.title( f"""$\chi:{chi}$
+                $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$
+                $\sigma_AB :{sAB}$""")
         self.weighted_linear_regression( x , y , sy, A , B )
 
     def data_analysis (self) :
