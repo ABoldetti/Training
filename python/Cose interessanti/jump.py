@@ -23,7 +23,7 @@ class Player:
         if( self.y ==groundy): 
             self.weight=0
             self.power=0
+    
 
-
-
-if( event.key == pygame.K_SPACE): Player.jump()
+if __name__ == '__main__':
+    if( event.key == pygame.K_SPACE): Player.jump()

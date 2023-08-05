@@ -5,10 +5,10 @@ import scipy.stats as ss
 import matplotlib.pyplot as plt
 import Interpolazione as i
 
-#il file CSV deve avere come prima colonna il nome VALUE nel caso in cui sia un istogramma,
-#nella seconda colonna nel caso in cui sia un'interpolazione
+#come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
 
-#
+#la funzione 'gauss' ha problemi con la formula della gaussiana, la fa troppo schiacciata
+#la funzione di propagazione dell'errore devo ancora capire come farla. SEGNARE OGNI IDEA
 
 def gauss( x: np.array , sx : float) -> np.array:
         n = x - np.average( x )
@@ -21,10 +21,11 @@ def bins ( x: np.array ):
     return np.sqrt( np.size( x ) )
 
 class labo:
-    def __init__(self):
-        self.data=pp.read_csv("/Users/andreaboldetti/Documents/GitHub/My_first_Repository/python/data.csv")
+    def __init__(self, path: str):
+        self.data=pp.read_csv("path")
         self.n_col=len(self.data.columns)
         pass
+
     def stdev( self, x : np.array ) :
         if np.size( x ) <20:
             a=np.sqrt( np.sum(( np.mean(x)- x )**2)/np.size(x)-1)
@@ -40,15 +41,15 @@ class labo:
 
     def two_column( self ):
 
-        x = np.array(self.data[ self.data.columns [0]].values)
-        y = np.array(self.data[ self.data.columns[1]].values)
-        sy = float(input("Inserire valore dell'incertezza su y"))
+        x = np.array( self.data[ self.data.columns[ 0 ] ].values )
+        y = np.array( self.data[ self.data.columns[ 1 ] ].values )
+        sy = float( input( "Inserire valore dell'incertezza su y" ) )
         a = i.interpolazione( x , y , sy )
         b = a.Lineare()
-        A = b.get("A value")
-        sA = b.get("A error")
-        B = b.get("B value")
-        sB = b.get("B error")
+        A = b.get( "A value" )
+        sA = b.get( "A error" )
+        B = b.get( "B value" )
+        sB = b.get( "B error" )
         chi = np.sum( np.power( ( ( y - A * x - B ) / sy) , 2))
         plt.title( f"""$\chi:{chi}$
                 $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$""")
@@ -56,17 +57,17 @@ class labo:
 
     def three_column( self ):
 
-        x = np.array(self.data[ self.data.columns [0]].values)
-        y = np.array(self.data[ self.data.columns [1]].values)
-        sy = np.array(self.data[ self.data.columns[2]].values)
+        x = np.array( self.data[ self.data.columns [0] ].values )
+        y = np.array( self.data[ self.data.columns [1] ].values )
+        sy = np.array( self.data[ self.data.columns[2] ].values )
         a = i.interpolazione( x , y , sy )
         b = a.Pesata()
-        A = b.get("A value")
-        sA = b.get("A error")
-        B = b.get("B value")
-        sB = b.get("B error")
-        sAB = b.get("coveriant")
-        chi = np.sum( ((y-A*x-B )/sy)**2)
+        A = b.get( "A value" )
+        sA = b.get( "A error" )
+        B = b.get( "B value" )
+        sB = b.get( "B error" )
+        sAB = b.get( "coveriant" )
+        chi = np.sum( ( ( y-A*x-B ) / sy ) **2 )
         plt.title( f"""$\chi:{chi}$
                 $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$
                 $\sigma_AB :{sAB}$""")
@@ -105,7 +106,7 @@ class labo:
         c=0
     
 if __name__ == '__main__' :
-    a=labo()
+    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/python/data.csv' )
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
