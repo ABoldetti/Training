@@ -4,28 +4,19 @@ import pandas as pp
 import scipy.stats as ss
 import matplotlib.pyplot as plt
 import Interpolazione as i
+import Err_prop as ep
 
 #come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
 
 #la funzione 'gauss' ha problemi con la formula della gaussiana, la fa troppo schiacciata
 #la funzione di propagazione dell'errore devo ancora capire come farla. SEGNARE OGNI IDEA
 
-def gauss( x: np.array , sx : float) -> np.array:
-        n = x - np.average( x )
-        d = 2 * sx**2
-        y = 1 / ( np.sqrt( 2 * np.pi ) * sx ) * np.exp( -0.5 * np.power( n , 2 ) / d )
-        return y
-def line ( x: np.array , A: float , B: float ) -> np.array:
-    return A*x + B
-def bins ( x: np.array ):
-    return np.sqrt( np.size( x ) )
 
 class labo:
     def __init__(self, path: str):
         self.data=pp.read_csv("path")
         self.n_col=len(self.data.columns)
         pass
-
     def stdev( self, x : np.array ) :
         if np.size( x ) <20:
             a=np.sqrt( np.sum(( np.mean(x)- x )**2)/np.size(x)-1)
@@ -102,8 +93,16 @@ class labo:
         plt.errorbar( x , y , sy , fmt='o')
         plt.plot( x , line( x , A , B ))
         plt.show()
-    def error_prop( self , formula: str) :
-        c=0
+    def error_prop( self , formula: str ) :
+        ep.propagazione_errore()
+#funzioni per disegnare retta e gaussiana
+def gauss( x: np.array , sx : float) -> np.array:
+        n = x - np.average( x )
+        d = 2 * sx**2
+        y = 1 / ( np.sqrt( 2 * np.pi ) * sx ) * np.exp( -0.5 * np.power( n , 2 ) / d )
+        return y
+def line ( x: np.array , A: float , B: float ) -> np.array:
+    return A*x + B
     
 if __name__ == '__main__' :
     a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/python/data.csv' )
