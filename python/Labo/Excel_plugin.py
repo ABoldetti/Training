@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from openpyxl.worksheet.table import Table
 import numpy as np
-
+import pandas as pd
 
 
 class excel :
@@ -21,12 +21,32 @@ class excel :
         e = h [ slice ( 6 , len( h ) -1 ) ]
         return e.split ( ":" )
     
-    def accumulating_data ( self , a :dict ) -> np.array :
-
-        c = 0
+    def accumulating_data ( self , coordinates :list ) ->  pd.DataFrame:
+        a = self.getting_coordinates( coordinates )
+        df = pd.DataFrame
+        ausy = list()
+        for i in range( ord( a [ 0 ] ) , ord( a [ 2 ] ) ):
+            ausy = list()
+            for j in range( a [ 1 ] + 1 , a [ 3 ]+1 ):
+                ausy.append( (self.ws[f"""{chr(i)}{j}"""].value) )
+            df[ str(self.ws[f"""{chr(i)}{a[1]}"""].value) ] = pd.DataFrame(ausy)
+        print(df)
+    def getting_coordinates ( self , set :dict ) -> dict :
+        a = list()
+        for i in range( len( set ) ):
+            ausy = 0
+            for j in range( len( set[i] ) ):
+                if ord( set[i][j] ) < 65:
+                    ausy = j
+                    break
+            n = int(set[ i ][ slice( j , len( set [ i ] ) ) ])
+            char = set[ i ][ slice( j ) ]
+            a.append( char )
+            a.append( n )
+        return a
         
     def rolling_table ( self ):
-        for n in range( len( self.ws.tables.values() ) ) :
+        for n in range( 1 , len( self.ws.tables.values()+1 ) ) :
             coordinates = self.table( f"""Table{n}""")
             ausy = np.array()
             ausy = self.accumulating_data( coordinates )
@@ -37,3 +57,5 @@ if __name__ == '__main__' :
     wb = load_workbook( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
     ws = wb.active
     print( len(ws.tables.values()))
+    a = excel( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
+    a.accumulating_data( ['D4', 'H13'])

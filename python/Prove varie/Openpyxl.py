@@ -33,13 +33,22 @@ for table in ws.tables.values() :
     c = list()
     c = b[2]
     d = c.split(",")
-    ausy = d[0]
-    e = ausy[slice( 6 , len( ausy ) -1 ) ]
-    h = e.split( ":")
-    print( h )
+    i = d[0]
+    e = i[slice( 6 , len( i ) -1 ) ]
+    string = e.split( ":")
+    print( type(string) )
+print((string[0]))
+for i in range( len( string ) ):
+    ausy = 0
+    for j in range( len( string[i] ) ):
+        if ord( string[i][j] ) < 65:
+            ausy = j
+            break
+    n = string[ i ][ slice( j , len( string [ i ] ) ) ]
+    char = string[ i ][ slice( j ) ]
+    print( char , n , f"""{char}{n}""")
+            
 
-sheet = wb['range names']
-print( sheet['D10'].value)
 # print( a )
 # for table in ws.tables:
 #     print( table , "\n\n\n\n\n\n")
