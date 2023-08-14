@@ -14,15 +14,19 @@ import Err_prop as ep
 
 class labo:
     def __init__(self, path: str):
-        self.data=pp.read_csv("path")
+
+        self.data=pp.read_csv( path )
         self.n_col=len(self.data.columns)
         pass
+    
     def stdev( self, x : np.array ) :
+
         if np.size( x ) <20:
             a=np.sqrt( np.sum(( np.mean(x)- x )**2)/np.size(x)-1)
         else:
             a=np.sqrt( np.sum((np.mean(x)- x)**2)/np.size(x) )
         return a
+    
     def one_column( self ):
 
         x = np.array(self.data.values)
@@ -93,8 +97,11 @@ class labo:
         plt.errorbar( x , y , sy , fmt='o')
         plt.plot( x , line( x , A , B ))
         plt.show()
+
     def error_prop( self , formula: str ) :
+
         ep.propagazione_errore()
+
 #funzioni per disegnare retta e gaussiana
 def gauss( x: np.array , sx : float) -> np.array:
         n = x - np.average( x )

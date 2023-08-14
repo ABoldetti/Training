@@ -1,5 +1,6 @@
 per lavorare con le stringhe trasformala in una lista e poi puoi lavorarci
 .Join lavora con le stringhe, prima convertire tutto in stringa e poi usare Join
+__contains__( stringa ) è una funzione per le stringhe che ritorna vero se è inclusa, falso se no
 
 .sort riordina l'oggetto specifico      sorted ti copia l'oggetto e te lo riordina
 
@@ -20,3 +21,9 @@ Se si fa [dataset].describe, si fa avg, stdev,min,max,ecc
 
 Numpy
 Per inserire i valori in un np.array, a=np.array=([0,1,2,3,4])
+
+Openpyxl
+Funziona col culo. Per prendere le coordinate di una tabella usare il codice già fatto
+
+matplotlib
+c'è una funzione per salvare i grafici come immagini
