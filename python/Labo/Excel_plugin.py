@@ -23,8 +23,9 @@ class excel :
     
     def accumulating_data ( self , coordinates :list ) ->  pd.DataFrame:
         a = self.getting_coordinates( coordinates )
-        df = pd.DataFrame
         ausy = list()
+        df = pd.DataFrame(ausy)
+        
         for i in range( ord( a [ 0 ] ) , ord( a [ 2 ] ) ):
             ausy = list()
             for j in range( a [ 1 ] + 1 , a [ 3 ]+1 ):
@@ -54,8 +55,8 @@ class excel :
 
 
 if __name__ == '__main__' :
-    wb = load_workbook( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
-    ws = wb.active
-    print( len(ws.tables.values()))
-    a = excel( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
+    #wb = load_workbook( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
+    #ws = wb.active
+    #print( len(ws.tables.values()))
+    a = excel( 'trial.xlsx')
     a.accumulating_data( ['D4', 'H13'])
