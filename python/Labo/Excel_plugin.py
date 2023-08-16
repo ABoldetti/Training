@@ -46,17 +46,17 @@ class excel :
             a.append( n )
         return a
         
-    def rolling_table ( self ):
-        for n in range( 1 , len( self.ws.tables.values()+1 ) ) :
-            coordinates = self.table( f"""Table{n}""")
-            ausy = np.array()
-            ausy = self.accumulating_data( coordinates )
+    def rolling_table ( self , n: int) -> pd.DataFrame :
+        
+        coordinates = self.table( f"""Table{n}""")
+        ausy = np.array()
+        return self.accumulating_data( coordinates )
 
 
 
 if __name__ == '__main__' :
-    #wb = load_workbook( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
-    #ws = wb.active
-    #print( len(ws.tables.values()))
-    a = excel( 'trial.xlsx')
-    a.accumulating_data( ['D4', 'H13'])
+    wb = load_workbook( 'trial.xlsx' )
+    ws = wb.active
+    print( ws.tables.values())
+    #a = excel( 'trial.xlsx')
+    #a.accumulating_data( ['D4', 'H13'])

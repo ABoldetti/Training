@@ -3,8 +3,11 @@ import numpy as np
 import pandas as pp
 import scipy.stats as ss
 import matplotlib.pyplot as plt
+
+# file secondari
 import Interpolazione as i
 import Err_prop as ep
+import Excel_plugin as xlsx
 
 #come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
 
@@ -14,9 +17,14 @@ import Err_prop as ep
 
 class labo:
     def __init__(self, path: str):
-
-        self.data=pp.read_csv( path )
-        self.n_col=len(self.data.columns)
+        ausy = path.split(".")
+        if ausy[len(ausy)-1] == 'csv':
+            self.csv = True
+            self.data=pp.read_csv( path )
+            self.n_col=len(self.data.columns)
+        elif ausy[len(ausy)-1] == 'xlsx':
+            self.csv = False
+            self.wb = xlsx.excel( path )
         pass
     
     def stdev( self, x : np.array ) :
@@ -27,11 +35,25 @@ class labo:
             a=np.sqrt( np.sum((np.mean(x)- x)**2)/np.size(x) )
         return a
     
+    def data_analysis (self) :
+        if self.csv :
+            if self.n_col == 1 :
+                self.one_column()
+                
+            elif self.n_col ==2 :
+                self.two_column()
+                
+            elif self.n_col ==3 :
+                self.three_column()
+        else :
+            for table in range( 1 , len( self.ws.tables.values()+1 ) ) :
+                self.data = self.wb.rolling_table( table )
+                self.n_col=len(self.data.columns)
     def one_column( self ):
 
         x = np.array(self.data.values)
         chi = np.sum( np.power( ( np.mean( x ) - x ) , 2 ) / np.power( self.stdev( x ) , 2 ) )
-        ss.chi2.cdf( chi , np.size( x ) - 3 )
+        string = f"""$ \chi: {round(chi,3)} , media: {round(np.mean(x),3)}$"""
         self.gaussian( x )
 
     def two_column( self ):
@@ -46,8 +68,9 @@ class labo:
         B = b.get( "B value" )
         sB = b.get( "B error" )
         chi = np.sum( np.power( ( ( y - A * x - B ) / sy) , 2))
-        plt.title( f"""$\chi:{chi}$
-                $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$""")
+        string = f"""$\chi:{chi}$
+                $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$"""
+        plt.title( string )
         self.linear_regression( x , y , sy, A , B )
 
     def three_column( self ):
@@ -63,27 +86,20 @@ class labo:
         sB = b.get( "B error" )
         sAB = b.get( "coveriant" )
         chi = np.sum( ( ( y-A*x-B ) / sy ) **2 )
-        plt.title( f"""$\chi:{chi}$
+        stringa = f"""$\chi:{chi}$
                 $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$
-                $\sigma_AB :{sAB}$""")
+                $\sigma_AB :{sAB}$"""
+        plt.title( stringa )
         self.weighted_linear_regression( x , y , sy, A , B )
 
-    def data_analysis (self) :
 
-        if self.n_col == 1 :
-            self.one_column()
-            
-        elif self.n_col ==2 :
-            self.two_column()
-            
-        elif self.n_col ==3 :
-            self.three_column()
             
     def gaussian( self , vec: np.array ) :
 
         plt.hist( vec , bins= int( np.size( vec )/self.stdev(vec) ) , density = True)
         span = np.linspace( min(vec), max(vec))
         plt.plot( span , gauss( span , self.stdev(vec) ))
+
         plt.show()
 
     def linear_regression( self , x: np.array , y: np.array, sy: float, A: float, B: float ):
@@ -99,7 +115,6 @@ class labo:
         plt.show()
 
     def error_prop( self , formula: str ) :
-
         ep.propagazione_errore()
 
 #funzioni per disegnare retta e gaussiana
@@ -112,7 +127,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/python/data.csv' )
+    a=labo( 'python\data.csv' )
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
