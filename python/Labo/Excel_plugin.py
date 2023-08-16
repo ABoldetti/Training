@@ -32,6 +32,7 @@ class excel :
                 ausy.append( (self.ws[f"""{chr(i)}{j}"""].value) )
             df[ str(self.ws[f"""{chr(i)}{a[1]}"""].value) ] = pd.DataFrame(ausy)
         print(df)
+
     def getting_coordinates ( self , set :dict ) -> dict :
         a = list()
         for i in range( len( set ) ):
@@ -45,12 +46,16 @@ class excel :
             a.append( char )
             a.append( n )
         return a
+    
+    def elaborating_coordinates( self , coordinates: list ):
+        return [ coordinates[ 0 ] , coordinates[ len(coordinates)-1 ] + 2 ]
+
         
-    def rolling_table ( self , n: int) -> pd.DataFrame :
+    def rolling_table ( self , n: int) -> dict :
         
         coordinates = self.table( f"""Table{n}""")
         ausy = np.array()
-        return self.accumulating_data( coordinates )
+        return {"data": self.accumulating_data( coordinates ), "coordinates": self.elaborating_coordinates(coordinates)}
 
 
 

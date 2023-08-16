@@ -1,4 +1,3 @@
-#Labo definitivo
 import numpy as np
 import pandas as pp
 import scipy.stats as ss
@@ -17,6 +16,7 @@ import Excel_plugin as xlsx
 
 class labo:
     def __init__(self, path: str):
+        self.round = int( input( "Quante cifre significative si vogliono avere nei risultati?" ) )
         ausy = path.split(".")
         if ausy[len(ausy)-1] == 'csv':
             self.csv = True
@@ -26,14 +26,6 @@ class labo:
             self.csv = False
             self.wb = xlsx.excel( path )
         pass
-    
-    def stdev( self, x : np.array ) :
-
-        if np.size( x ) <20:
-            a=np.sqrt( np.sum(( np.mean(x)- x )**2)/np.size(x)-1)
-        else:
-            a=np.sqrt( np.sum((np.mean(x)- x)**2)/np.size(x) )
-        return a
     
     def data_analysis (self) :
         if self.csv :
@@ -47,14 +39,28 @@ class labo:
                 self.three_column()
         else :
             for table in range( 1 , len( self.ws.tables.values()+1 ) ) :
-                self.data = self.wb.rolling_table( table )
+                ausy = self.wb.rolling_table( table )
+                self.data = ausy.get("data")
+                self.coordinates = ausy.get("coordinates")
                 self.n_col=len(self.data.columns)
+
+
     def one_column( self ):
 
         x = np.array(self.data.values)
-        chi = np.sum( np.power( ( np.mean( x ) - x ) , 2 ) / np.power( self.stdev( x ) , 2 ) )
-        string = f"""$ \chi: {round(chi,3)} , media: {round(np.mean(x),3)}$"""
+        chi = np.sum( np.power( ( np.mean( x ) - x ) , 2 ) / np.power( stdev( x ) , 2 ) )
         self.gaussian( x )
+        if self.csv:
+            string = f"""$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"""
+            plt.title( string )
+            plt.show()
+        else :
+            letter = ord(self.coordinates[0])
+            number = self.coordinates[1]
+            self.wb[f"""{chr(letter)}{number}"""] = "chi:"
+            self.wb[f"""{chr(letter)}{number+1}"""] = round( chi , self.round)
+            self.wb[f"""{chr(letter+1)}{number}"""] = "media :"
+            self.wb[f"""{chr(letter+1)}{number}"""] = round(np.mean(x),self.round)
 
     def two_column( self ):
 
@@ -68,10 +74,12 @@ class labo:
         B = b.get( "B value" )
         sB = b.get( "B error" )
         chi = np.sum( np.power( ( ( y - A * x - B ) / sy) , 2))
-        string = f"""$\chi:{chi}$
-                $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$"""
-        plt.title( string )
         self.linear_regression( x , y , sy, A , B )
+        if self.csv:
+            string = f"""$\chi:{chi}$
+                    $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$"""
+            plt.title( string )
+            plt.show()
 
     def three_column( self ):
 
@@ -87,26 +95,26 @@ class labo:
         sAB = b.get( "coveriant" )
         chi = np.sum( ( ( y-A*x-B ) / sy ) **2 )
         stringa = f"""$\chi:{chi}$
-                $equazione: ({round(A,3)}\pm{round(sA,3)})x + ({round(B,3)}\pm{round(sB,3)})$
+                $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$
                 $\sigma_AB :{sAB}$"""
         plt.title( stringa )
         self.weighted_linear_regression( x , y , sy, A , B )
 
 
-            
+    
     def gaussian( self , vec: np.array ) :
 
-        plt.hist( vec , bins= int( np.size( vec )/self.stdev(vec) ) , density = True)
+        plt.hist( vec , bins= int( np.size( vec )/stdev(vec) ) , density = True)
         span = np.linspace( min(vec), max(vec))
-        plt.plot( span , gauss( span , self.stdev(vec) ))
+        plt.plot( span , gauss( span , stdev(vec) ))
 
-        plt.show()
+        
 
     def linear_regression( self , x: np.array , y: np.array, sy: float, A: float, B: float ):
 
         plt.errorbar( x , y , sy*np.linspace( min( x ) , max( x ), np.size( x ) ) , fmt='o', capsize=4, color='red', ecolor='black')
         plt.plot( x , line( x ,A , B))
-        plt.show()
+        
 
     def weighted_linear_regression( self , x: np.array , y: np.array, sy: np.array, A: float, B: float ):
         
@@ -118,6 +126,13 @@ class labo:
         ep.propagazione_errore()
 
 #funzioni per disegnare retta e gaussiana
+def stdev( x : np.array ) :
+        if np.size( x ) <20:
+            a=np.sqrt( np.sum(( np.mean(x) - x )**2)/(np.size(x)-1))
+        else:
+            a=np.sqrt( np.sum((np.mean(x)- x)**2)/np.size(x) )
+        return a
+    
 def gauss( x: np.array , sx : float) -> np.array:
         n = x - np.average( x )
         d = 2 * sx**2
@@ -127,7 +142,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( 'python\data.csv' )
+    a=labo( 'python/data.csv' )
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
@@ -136,3 +151,6 @@ if __name__ == '__main__' :
     # #a.linear_regression( x , y , sy, c.get("A value") , c.get("B value") )
     # a.gaussian(x)
     a.data_analysis()
+    # a = np.array([ 0.1,0.4,0.6,0.4,0.5,0.4,0.3,0.5,0.8,0.2,0.4])
+    # print(  np.sum(( np.mean(a) - a )**2)/(np.size(a)-1)) 
+    # print( stdev( a ))
