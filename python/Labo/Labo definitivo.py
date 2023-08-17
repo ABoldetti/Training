@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pp
 import scipy.stats as ss
 import matplotlib.pyplot as plt
+from openpyxl.drawing.image import Image
 
 # file secondari
 import Interpolazione as i
@@ -38,8 +39,8 @@ class labo:
             elif self.n_col ==3 :
                 self.three_column()
         else :
-            for table in range( 1 , len( self.ws.tables.values()+1 ) ) :
-                ausy = self.wb.rolling_table( table )
+            for self.table in range( 1 , len( self.ws.tables.values()+1 ) ) :
+                ausy = self.wb.rolling_table( self.table )
                 self.data = ausy.get("data")
                 self.coordinates = ausy.get("coordinates")
                 self.n_col=len(self.data.columns)
@@ -49,18 +50,25 @@ class labo:
 
         x = np.array(self.data.values)
         chi = np.sum( np.power( ( np.mean( x ) - x ) , 2 ) / np.power( stdev( x ) , 2 ) )
+        
         self.gaussian( x )
+        
+        # modo per selezionare se dare l'input sul terminale o sul file excel
         if self.csv:
             string = f"""$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"""
-            plt.title( string )
+            print( string )
             plt.show()
         else :
+
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
-            self.wb[f"""{chr(letter)}{number}"""] = "chi:"
-            self.wb[f"""{chr(letter)}{number+1}"""] = round( chi , self.round)
-            self.wb[f"""{chr(letter+1)}{number}"""] = "media :"
-            self.wb[f"""{chr(letter+1)}{number}"""] = round(np.mean(x),self.round)
+            #scrittura dei vari valori nelle celle sottostanti la tabella
+            self.wb[f"{chr(letter)}{number+1}"] = "chi:"
+            self.wb[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
+            self.wb[f"{chr(letter)}{number+2}"] = "media :"
+            self.wb[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
+            plt.savefig( f"Tabella{self.table}.jpg" )
+            self.wb.ws.add_image(f"Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
 
     def two_column( self ):
 
@@ -78,8 +86,21 @@ class labo:
         if self.csv:
             string = f"""$\chi:{chi}$
                     $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$"""
-            plt.title( string )
+            print( string )
             plt.show()
+        else :
+            letter = ord(self.coordinates[0])
+            number = self.coordinates[1]
+            #scrittura dei vari valori nelle celle sottostanti la tabella
+            self.wb[f"""{chr(letter)}{number+1}"""] = "chi:"
+            self.wb[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
+            self.wb[f"""{chr(letter)}{number+2}"""] = "A :"
+            self.wb[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + f"{round( sA , self.round)}"
+            self.wb[f"""{chr(letter)}{number+3}"""] = "B:"
+            self.wb[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + f"{round( sB , self.round)}"
+            #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
+            plt.savefig(f"table{self.table}.jpg")
+            self.wb.ws.add_image(f"Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
 
     def three_column( self ):
 
@@ -94,14 +115,33 @@ class labo:
         sB = b.get( "B error" )
         sAB = b.get( "coveriant" )
         chi = np.sum( ( ( y-A*x-B ) / sy ) **2 )
-        stringa = f"""$\chi:{chi}$
+        self.weighted_linear_regression( x , y , sy, A , B )
+        
+        # modo per selezionare dove mettere
+        if self.csv:
+            string = f"""$\chi:{chi}$
                 $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$
                 $\sigma_AB :{sAB}$"""
-        plt.title( stringa )
-        self.weighted_linear_regression( x , y , sy, A , B )
+            print( string )
+            plt.show()
+        else :
+            letter = ord(self.coordinates[0])
+            number = self.coordinates[1]
+            #scrittura dei vari valori nelle celle sottostanti la tabella
+            self.wb[f"""{chr(letter)}{number+1}"""] = "chi:"
+            self.wb[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
+            self.wb[f"""{chr(letter)}{number+2}"""] = "A :"
+            self.wb[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + f"{round( sA , self.round)}"
+            self.wb[f"""{chr(letter)}{number+3}"""] = "B:"
+            self.wb[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + f"{round( sB , self.round)}"
+            self.wb[f"""{chr(letter)}{number+4}"""] = "Covarianza:"
+            self.wb[f"""{chr(letter+1)}{number+4}"""] = sAB
+            #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
+            plt.savefig(f"table{self.table}.jpg")
+            self.wb.ws.add_image(f"Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
 
 
-    
+# Funzioni per i grafici di matplotlib
     def gaussian( self , vec: np.array ) :
 
         plt.hist( vec , bins= int( np.size( vec )/stdev(vec) ) , density = True)
