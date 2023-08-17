@@ -17,7 +17,8 @@ import Excel_plugin as xlsx
 
 class labo:
     def __init__(self, path: str):
-        self.round = int( input( "Quante cifre significative si vogliono avere nei risultati?" ) )
+        # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
+        self.round = 3
         ausy = path.split(".")
         if ausy[len(ausy)-1] == 'csv':
             self.csv = True
@@ -39,12 +40,20 @@ class labo:
             elif self.n_col ==3 :
                 self.three_column()
         else :
-            for self.table in range( 1 , len( self.ws.tables.values()+1 ) ) :
+            for self.table in self.wb.ws.tables.values() :
+                print( self.table)
                 ausy = self.wb.rolling_table( self.table )
                 self.data = ausy.get("data")
                 self.coordinates = ausy.get("coordinates")
                 self.n_col=len(self.data.columns)
-
+                if self.n_col == 1 :
+                    self.one_column()
+                    
+                elif self.n_col ==2 :
+                    self.two_column()
+                    
+                elif self.n_col ==3 :
+                    self.three_column()
 
     def one_column( self ):
 
@@ -182,7 +191,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( 'python/data.csv' )
+    a=labo( 'trial.xlsx' )
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1

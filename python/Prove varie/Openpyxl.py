@@ -36,7 +36,6 @@ for table in ws.tables.values() :
     i = d[0]
     e = i[slice( 6 , len( i ) -1 ) ]
     string = e.split( ":")
-    print( type(string) )
 print((string[0]))
 for i in range( len( string ) ):
     ausy = 0

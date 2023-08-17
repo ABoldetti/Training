@@ -20,20 +20,22 @@ class excel :
         h = d [ 0 ]
         e = h [ slice ( 6 , len( h ) -1 ) ]
         return e.split ( ":" )
-    
+
     def accumulating_data ( self , coordinates :list ) ->  pd.DataFrame:
-        a = self.getting_coordinates( coordinates )
         ausy = list()
         df = pd.DataFrame(ausy)
-        
-        for i in range( ord( a [ 0 ] ) , ord( a [ 2 ] ) ):
+        print( coordinates )
+        for i in range( ord( coordinates [ 0 ] ) , ord( coordinates [ 2 ] ) ):
+            print( i , "\n" )
             ausy = list()
-            for j in range( a [ 1 ] + 1 , a [ 3 ]+1 ):
+            for j in range( coordinates [ 1 ] + 1 , coordinates [ 3 ]+1 ):
                 ausy.append( (self.ws[f"""{chr(i)}{j}"""].value) )
-            df[ str(self.ws[f"""{chr(i)}{a[1]}"""].value) ] = pd.DataFrame(ausy)
+            df[ str(self.ws[f"""{chr(i)}{coordinates[1]}"""].value) ] = pd.DataFrame(ausy)
         print(df)
-
-    def getting_coordinates ( self , set :dict ) -> dict :
+        return(df)
+    
+    #funzione che, date le coordinate attaccate, le splitta in parte letterale e parte numerica
+    def getting_coordinates ( self , set :list ) -> list :
         a = list()
         for i in range( len( set ) ):
             ausy = 0
@@ -53,15 +55,14 @@ class excel :
         
     def rolling_table ( self , n: int) -> dict :
         
-        coordinates = self.table( f"""Table{n}""")
-        ausy = np.array()
+        coordinates = self.getting_coordinates( self.table( f"""Table{n}""") )
         return {"data": self.accumulating_data( coordinates ), "coordinates": self.elaborating_coordinates(coordinates)}
 
 
 
 if __name__ == '__main__' :
-    wb = load_workbook( 'trial.xlsx' )
-    ws = wb.active
-    print( ws.tables.values())
-    #a = excel( 'trial.xlsx')
-    #a.accumulating_data( ['D4', 'H13'])
+    # wb = load_workbook( 'trial.xlsx' )
+    # ws = wb.active
+    a = excel( 'trial.xlsx')
+    print( a.rolling_table(1))
+    c = 0
