@@ -18,6 +18,7 @@ import Excel_plugin as xlsx
 class labo:
     def __init__(self, path: str):
         # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
+        self.path = path
         self.round = 3
         ausy = path.split(".")
         if ausy[len(ausy)-1] == 'csv':
@@ -81,7 +82,7 @@ class labo:
             self.wb.ws[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
             plt.savefig( f"Tabella{self.count}.jpg" )
             self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
-            self.wb.wb.save()
+            self.wb.wb.save(self.path)
 
 
     def two_column( self ):
@@ -115,7 +116,7 @@ class labo:
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
             plt.savefig(f"table{self.count}.jpg")
             self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
-            self.wb.wb.save()
+            self.wb.wb.save(self.path)
 
     def three_column( self ):
 
@@ -154,7 +155,7 @@ class labo:
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
             plt.savefig(f"table{self.count}.jpg")
             self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
-            self.wb.wb.save()
+            self.wb.wb.save(self.path)
 
 
 # Funzioni per i grafici di matplotlib
