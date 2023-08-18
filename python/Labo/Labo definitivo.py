@@ -27,6 +27,7 @@ class labo:
         elif ausy[len(ausy)-1] == 'xlsx':
             self.csv = False
             self.wb = xlsx.excel( path )
+            self.count = 0
         pass
     
     def data_analysis (self) :
@@ -41,8 +42,8 @@ class labo:
                 self.three_column()
         else :
             for self.table in self.wb.ws.tables.values() :
-                print( self.table)
-                ausy = self.wb.rolling_table( self.table )
+                self.count += 1
+                ausy = self.wb.rolling_table( str(self.table) )
                 self.data = ausy.get("data")
                 self.coordinates = ausy.get("coordinates")
                 self.n_col=len(self.data.columns)
@@ -64,26 +65,30 @@ class labo:
         
         # modo per selezionare se dare l'input sul terminale o sul file excel
         if self.csv:
+
             string = f"""$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"""
             print( string )
             plt.show()
+
         else :
 
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
             #scrittura dei vari valori nelle celle sottostanti la tabella
-            self.wb[f"{chr(letter)}{number+1}"] = "chi:"
-            self.wb[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
-            self.wb[f"{chr(letter)}{number+2}"] = "media :"
-            self.wb[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
-            plt.savefig( f"Tabella{self.table}.jpg" )
-            self.wb.ws.add_image(f"Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
+            self.wb.ws[f"{chr(letter)}{number+1}"] = "chi:"
+            self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
+            self.wb.ws[f"{chr(letter)}{number+2}"] = "media :"
+            self.wb.ws[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
+            plt.savefig( f"Tabella{self.count}.jpg" )
+            self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            self.wb.wb.save()
+
 
     def two_column( self ):
 
         x = np.array( self.data[ self.data.columns[ 0 ] ].values )
         y = np.array( self.data[ self.data.columns[ 1 ] ].values )
-        sy = float( input( "Inserire valore dell'incertezza su y" ) )
+        sy = float( input( "Inserire valore dell'incertezza su y: \t" ) )
         a = i.interpolazione( x , y , sy )
         b = a.Lineare()
         A = b.get( "A value" )
@@ -101,15 +106,16 @@ class labo:
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
             #scrittura dei vari valori nelle celle sottostanti la tabella
-            self.wb[f"""{chr(letter)}{number+1}"""] = "chi:"
-            self.wb[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
-            self.wb[f"""{chr(letter)}{number+2}"""] = "A :"
-            self.wb[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + f"{round( sA , self.round)}"
-            self.wb[f"""{chr(letter)}{number+3}"""] = "B:"
-            self.wb[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + f"{round( sB , self.round)}"
+            self.wb.ws[f"""{chr(letter)}{number+1}"""] = "chi:"
+            self.wb.ws[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
+            self.wb.ws[f"""{chr(letter)}{number+2}"""] = "A :"
+            self.wb.ws[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + "+" + f"{round( sA , self.round)}"
+            self.wb.ws[f"""{chr(letter)}{number+3}"""] = "B:"
+            self.wb.ws[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + "+" + f"{round( sB , self.round)}"
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"table{self.table}.jpg")
-            self.wb.ws.add_image(f"Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
+            plt.savefig(f"table{self.count}.jpg")
+            self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            self.wb.wb.save()
 
     def three_column( self ):
 
@@ -137,17 +143,18 @@ class labo:
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
             #scrittura dei vari valori nelle celle sottostanti la tabella
-            self.wb[f"""{chr(letter)}{number+1}"""] = "chi:"
-            self.wb[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
-            self.wb[f"""{chr(letter)}{number+2}"""] = "A :"
-            self.wb[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + f"{round( sA , self.round)}"
-            self.wb[f"""{chr(letter)}{number+3}"""] = "B:"
-            self.wb[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + f"{round( sB , self.round)}"
-            self.wb[f"""{chr(letter)}{number+4}"""] = "Covarianza:"
-            self.wb[f"""{chr(letter+1)}{number+4}"""] = sAB
+            self.wb.ws[f"""{chr(letter)}{number+1}"""] = "chi:"
+            self.wb.ws[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
+            self.wb.ws[f"""{chr(letter)}{number+2}"""] = "A :"
+            self.wb.ws[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + "+" + f"{round( sA , self.round)}"
+            self.wb.ws[f"""{chr(letter)}{number+3}"""] = "B:"
+            self.wb.ws[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + "+" + f"{round( sB , self.round)}"
+            self.wb.ws[f"""{chr(letter)}{number+4}"""] = "Covarianza:"
+            self.wb.ws[f"""{chr(letter+1)}{number+4}"""] = sAB
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"table{self.table}.jpg")
-            self.wb.ws.add_image(f"Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
+            plt.savefig(f"table{self.count}.jpg")
+            self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            self.wb.wb.save()
 
 
 # Funzioni per i grafici di matplotlib
