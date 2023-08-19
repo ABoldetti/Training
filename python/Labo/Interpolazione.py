@@ -1,7 +1,7 @@
 import numpy as np
 
 #in output viene ritornata un dizionario contenente in ordine (A, sA, B, sB)
-#pane fuori
+
 class interpolazione:
     def __init__(self, x: np.array, y: np.array, sY):
         self.x = x
@@ -12,6 +12,7 @@ class interpolazione:
         else: 
             self.a = False
         pass
+    
     def Lineare( self ) -> dict:
         if np.size( self.x ) != np.size( self.y ) :
             print("Dati inseriti non validi")

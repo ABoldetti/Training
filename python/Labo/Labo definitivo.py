@@ -98,6 +98,7 @@ class labo:
         sB = b.get( "B error" )
         chi = np.sum( np.power( ( ( y - A * x - B ) / sy) , 2))
         self.linear_regression( x , y , sy, A , B )
+        
         if self.csv:
             string = f"""$\chi:{chi}$
                     $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$"""
@@ -132,7 +133,8 @@ class labo:
         sAB = b.get( "coveriant" )
         chi = np.sum( ( ( y-A*x-B ) / sy ) **2 )
         self.weighted_linear_regression( x , y , sy, A , B )
-        
+        plt.xlabel( self.data.columns[0] )
+        plt.ylabel( self.data.columns[1] )
         # modo per selezionare dove mettere
         if self.csv:
             string = f"""$\chi:{chi}$
@@ -161,6 +163,7 @@ class labo:
 # Funzioni per i grafici di matplotlib
     def gaussian( self , vec: np.array ) :
 
+        plt.xlabel( self.data.columns[0] )
         plt.hist( vec , bins= int( np.size( vec )/stdev(vec) ) , density = True)
         span = np.linspace( min(vec), max(vec))
         plt.plot( span , gauss( span , stdev(vec) ))
@@ -169,12 +172,16 @@ class labo:
 
     def linear_regression( self , x: np.array , y: np.array, sy: float, A: float, B: float ):
 
-        plt.errorbar( x , y , sy*np.linspace( min( x ) , max( x ), np.size( x ) ) , fmt='o', capsize=4, color='red', ecolor='black')
+        plt.xlabel( self.data.columns[0] )
+        plt.ylabel( self.data.columns[1] )
+        plt.errorbar( x , y , sy*np.ones( np.size( x ) ) , fmt='o', capsize=4, color='red', ecolor='black')
         plt.plot( x , line( x ,A , B))
         
 
     def weighted_linear_regression( self , x: np.array , y: np.array, sy: np.array, A: float, B: float ):
         
+        plt.xlabel( self.data.columns[0] )
+        plt.ylabel( self.data.columns[1] )
         plt.errorbar( x , y , sy , fmt='o')
         plt.plot( x , line( x , A , B ))
         plt.show()
@@ -199,7 +206,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( 'trial.xlsx' )
+    a=labo( 'C:\Users\Utente\OneDrive\Documenti\GitHub\My_first_Repository\trial.xlsx' )
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
