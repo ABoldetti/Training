@@ -21,6 +21,7 @@ class labo:
         self.path = path
         # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
         self.round = 3
+        self.nome = self.nome_file()
         ausy = path.split(".")
         if ausy[len(ausy)-1] == 'csv':
             self.csv = True
@@ -31,7 +32,10 @@ class labo:
             self.wb = xlsx.excel( path )
             self.count = 0
         pass
-    
+    def nome_file( self ) -> str:
+        c = self.path.split("/")
+        return c[ len(c)-1 ]
+
     def data_analysis (self) :
         if self.csv :
             if self.n_col == 1 :
@@ -81,10 +85,9 @@ class labo:
             self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
             self.wb.ws[f"{chr(letter)}{number+2}"] = "media :"
             self.wb.ws[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
-            plt.savefig( f"Tabella{self.count}.jpg" )
-            self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            plt.savefig( f"{self.nome} Tabella{self.count}.jpg" )
+            # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
-
 
     def two_column( self ):
 
@@ -116,8 +119,8 @@ class labo:
             self.wb.ws[f"""{chr(letter)}{number+3}"""] = "B:"
             self.wb.ws[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + "+" + f"{round( sB , self.round)}"
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"table{self.count}.jpg")
-            # self.wb.ws.add_image( f"Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
+            plt.savefig(f"{self.nome} Tabella{self.count}.jpg")
+            # self.wb.ws.add_image( f"{self.nome} Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
             self.wb.wb.save(self.path)
 
     def three_column( self ):
@@ -156,8 +159,8 @@ class labo:
             self.wb.ws[f"""{chr(letter)}{number+4}"""] = "Covarianza:"
             self.wb.ws[f"""{chr(letter+1)}{number+4}"""] = sAB
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"table{self.count}.jpg")
-            self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            plt.savefig(f"{self.nome} Tabella{self.count}.jpg")
+            # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
 
 
@@ -187,8 +190,6 @@ class labo:
         plt.plot( x , line( x , A , B ))
         plt.show()
 
-    def error_prop( self , formula: str ) :
-        ep.propagazione_errore()
 
 #funzioni per disegnare retta e gaussiana
 def stdev( x : np.array ) :
