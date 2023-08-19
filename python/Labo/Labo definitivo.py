@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pp
 import scipy.stats as ss
 import matplotlib.pyplot as plt
-from openpyxl.drawing.image import Image
+
 
 # file secondari
 import Interpolazione as i
@@ -17,8 +17,9 @@ import Excel_plugin as xlsx
 
 class labo:
     def __init__(self, path: str):
-        # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
+
         self.path = path
+        # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
         self.round = 3
         ausy = path.split(".")
         if ausy[len(ausy)-1] == 'csv':
@@ -67,7 +68,7 @@ class labo:
         # modo per selezionare se dare l'input sul terminale o sul file excel
         if self.csv:
 
-            string = f"""$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"""
+            string = f"$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"
             print( string )
             plt.show()
 
@@ -116,7 +117,7 @@ class labo:
             self.wb.ws[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + "+" + f"{round( sB , self.round)}"
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
             plt.savefig(f"table{self.count}.jpg")
-            self.wb.ws.add_image(f"Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            # self.wb.ws.add_image( f"Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
             self.wb.wb.save(self.path)
 
     def three_column( self ):
@@ -206,7 +207,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( 'C:\Users\Utente\OneDrive\Documenti\GitHub\My_first_Repository\trial.xlsx' )
+    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
