@@ -1,12 +1,10 @@
 import numpy as np
 import pandas as pp
-import scipy.stats as ss
 import matplotlib.pyplot as plt
 
 
 # file secondari
 import Interpolazione as i
-import Err_prop as ep
 import Excel_plugin as xlsx
 
 #come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
@@ -32,27 +30,13 @@ class labo:
             self.wb = xlsx.excel( path )
             self.count = 0
         pass
+
     def nome_file( self ) -> str:
         c = self.path.split("/")
         return c[ len(c)-1 ]
 
     def data_analysis (self) :
-        if self.csv :
-            if self.n_col == 1 :
-                self.one_column()
-                
-            elif self.n_col ==2 :
-                self.two_column()
-                
-            elif self.n_col ==3 :
-                self.three_column()
-        else :
-            for self.table in self.wb.ws.tables.values() :
-                self.count += 1
-                ausy = self.wb.rolling_table( str(self.table) )
-                self.data = ausy.get("data")
-                self.coordinates = ausy.get("coordinates")
-                self.n_col=len(self.data.columns)
+            if self.csv:
                 if self.n_col == 1 :
                     self.one_column()
                     
@@ -61,6 +45,23 @@ class labo:
                     
                 elif self.n_col ==3 :
                     self.three_column()
+            else :
+                for table in self.wb.ws.tables.values() :
+                    self.count += 1
+                    ausy = self.wb.rolling_table( str( table ) )
+                    self.data = ausy.get( "data" )
+                    self.coordinates = ausy.get( "coordinates" )
+                    self.n_col=len( self.data.columns )
+                    if self.n_col == 1 :
+                        self.one_column()
+                        
+                    elif self.n_col ==2 :
+                        self.two_column()
+                        
+                    elif self.n_col ==3 :
+                        self.three_column()
+
+
 
     def one_column( self ):
 
@@ -80,12 +81,14 @@ class labo:
 
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
+
             #scrittura dei vari valori nelle celle sottostanti la tabella
             self.wb.ws[f"{chr(letter)}{number+1}"] = "chi:"
             self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
             self.wb.ws[f"{chr(letter)}{number+2}"] = "media :"
             self.wb.ws[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
             plt.savefig( f"{self.nome} Tabella{self.count}.jpg" )
+            plt.clf()
             # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
 
@@ -111,15 +114,17 @@ class labo:
         else :
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
+
             #scrittura dei vari valori nelle celle sottostanti la tabella
-            self.wb.ws[f"""{chr(letter)}{number+1}"""] = "chi:"
-            self.wb.ws[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
-            self.wb.ws[f"""{chr(letter)}{number+2}"""] = "A :"
-            self.wb.ws[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + "+" + f"{round( sA , self.round)}"
-            self.wb.ws[f"""{chr(letter)}{number+3}"""] = "B:"
-            self.wb.ws[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + "+" + f"{round( sB , self.round)}"
+            self.wb.ws[f"{chr(letter)}{number+1}"] = "chi:"
+            self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
+            self.wb.ws[f"{chr(letter)}{number+2}"] = "A :"
+            self.wb.ws[f"{chr(letter+1)}{number+2}"] = f"{round( A , self.round)}" + " + " + f"{round( sA , self.round)}"
+            self.wb.ws[f"{chr(letter)}{number+3}"] = "B:"
+            self.wb.ws[f"{chr(letter+1)}{number+3}"] = f"{round( B , self.round)}" + " + " + f"{round( sB , self.round)}"
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
             plt.savefig(f"{self.nome} Tabella{self.count}.jpg")
+            plt.clf()
             # self.wb.ws.add_image( f"{self.nome} Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
             self.wb.wb.save(self.path)
 
@@ -134,7 +139,7 @@ class labo:
         sA = b.get( "A error" )
         B = b.get( "B value" )
         sB = b.get( "B error" )
-        sAB = b.get( "coveriant" )
+        sAB = b.get( "covariant" )
         chi = np.sum( ( ( y-A*x-B ) / sy ) **2 )
         self.weighted_linear_regression( x , y , sy, A , B )
         plt.xlabel( self.data.columns[0] )
@@ -149,17 +154,19 @@ class labo:
         else :
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
+
             #scrittura dei vari valori nelle celle sottostanti la tabella
-            self.wb.ws[f"""{chr(letter)}{number+1}"""] = "chi:"
-            self.wb.ws[f"""{chr(letter+1)}{number+1}"""] = round( chi , self.round)
-            self.wb.ws[f"""{chr(letter)}{number+2}"""] = "A :"
-            self.wb.ws[f"""{chr(letter+1)}{number+2}"""] = f"{round( A , self.round)}" + "+" + f"{round( sA , self.round)}"
-            self.wb.ws[f"""{chr(letter)}{number+3}"""] = "B:"
-            self.wb.ws[f"""{chr(letter+1)}{number+3}"""] = f"{round( B , self.round)}" + "+" + f"{round( sB , self.round)}"
-            self.wb.ws[f"""{chr(letter)}{number+4}"""] = "Covarianza:"
-            self.wb.ws[f"""{chr(letter+1)}{number+4}"""] = sAB
+            self.wb.ws[f"{chr(letter)}{number+1}"] = "chi:"
+            self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
+            self.wb.ws[f"{chr(letter)}{number+2}"] = "A :"
+            self.wb.ws[f"{chr(letter+1)}{number+2}"] = f"{round( A , self.round)}" + " + " + f"{round( sA , self.round)}"
+            self.wb.ws[f"{chr(letter)}{number+3}"] = "B:"
+            self.wb.ws[f"{chr(letter+1)}{number+3}"] = f"{round( B , self.round)}" + " + " + f"{round( sB , self.round)}"
+            self.wb.ws[f"{chr(letter)}{number+4}"] = "Covarianza:"
+            self.wb.ws[f"{chr(letter+1)}{number+4}"] = round( sAB , self.round)
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
             plt.savefig(f"{self.nome} Tabella{self.count}.jpg")
+            plt.clf()
             # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
 
@@ -179,16 +186,17 @@ class labo:
         plt.xlabel( self.data.columns[0] )
         plt.ylabel( self.data.columns[1] )
         plt.errorbar( x , y , sy*np.ones( np.size( x ) ) , fmt='o', capsize=4, color='red', ecolor='black')
-        plt.plot( x , line( x ,A , B))
+        span = np.linspace( min(x), max(x))
+        plt.plot( span , line( span ,A , B))
         
 
     def weighted_linear_regression( self , x: np.array , y: np.array, sy: np.array, A: float, B: float ):
         
         plt.xlabel( self.data.columns[0] )
         plt.ylabel( self.data.columns[1] )
-        plt.errorbar( x , y , sy , fmt='o')
-        plt.plot( x , line( x , A , B ))
-        plt.show()
+        plt.errorbar( x , y , sy , fmt='o', capsize=4, color='red', ecolor='black' )
+        span = np.linspace( min(x), max(x))
+        plt.plot( span , line( span , A , B ))
 
 
 #funzioni per disegnare retta e gaussiana
