@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pp
 import matplotlib.pyplot as plt
+import os
 
 
 # file secondari
@@ -10,17 +11,16 @@ import Excel_plugin as xlsx
 #come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
 
 #la funzione 'gauss' ha problemi con la formula della gaussiana, la fa troppo schiacciata
-#la funzione di propagazione dell'errore devo ancora capire come farla. SEGNARE OGNI IDEA
 
 
 class labo:
     def __init__(self, path: str):
-
         self.path = path
         # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
         self.round = 3
-        self.nome = self.nome_file()
         ausy = path.split(".")
+        c = self.path.split("/")
+        self.name = c[ len(c)-1 ]
         if ausy[len(ausy)-1] == 'csv':
             self.csv = True
             self.data=pp.read_csv( path )
@@ -29,11 +29,12 @@ class labo:
             self.csv = False
             self.wb = xlsx.excel( path )
             self.count = 0
-        pass
+        
 
-    def nome_file( self ) -> str:
-        c = self.path.split("/")
-        return c[ len(c)-1 ]
+        #modifica del path per salvare le foto
+        self.dir_name = '/Users/andreaboldetti/Documents/Foto_python'
+        plt.rcParams["savefig.directory"] = os.chdir ( os.path.dirname( self.dir_name ) )
+        pass
 
     def data_analysis (self) :
             if self.csv:
@@ -76,6 +77,8 @@ class labo:
             string = f"$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"
             print( string )
             plt.show()
+            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.clf()
 
         else :
 
@@ -87,7 +90,7 @@ class labo:
             self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
             self.wb.ws[f"{chr(letter)}{number+2}"] = "media :"
             self.wb.ws[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
-            plt.savefig( f"{self.nome} Tabella{self.count}.jpg" )
+            plt.savefig( f"{self.name} Tabella{self.count}.jpg" )
             plt.clf()
             # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
@@ -111,6 +114,8 @@ class labo:
                     $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$"""
             print( string )
             plt.show()
+            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.clf()
         else :
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
@@ -123,9 +128,9 @@ class labo:
             self.wb.ws[f"{chr(letter)}{number+3}"] = "B:"
             self.wb.ws[f"{chr(letter+1)}{number+3}"] = f"{round( B , self.round)}" + " + " + f"{round( sB , self.round)}"
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"{self.nome} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
             plt.clf()
-            # self.wb.ws.add_image( f"{self.nome} Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
+            # self.wb.ws.add_image( f"{self.name} Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
             self.wb.wb.save(self.path)
 
     def three_column( self ):
@@ -151,6 +156,8 @@ class labo:
                 $\sigma_AB :{sAB}$"""
             print( string )
             plt.show()
+            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.clf()
         else :
             letter = ord(self.coordinates[0])
             number = self.coordinates[1]
@@ -165,7 +172,7 @@ class labo:
             self.wb.ws[f"{chr(letter)}{number+4}"] = "Covarianza:"
             self.wb.ws[f"{chr(letter+1)}{number+4}"] = round( sAB , self.round)
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"{self.nome} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
             plt.clf()
             # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)

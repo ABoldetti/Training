@@ -6,7 +6,7 @@ import pandas as pd
 # class to take the data from an excel, to use it input the path of the excel file and use rolling_tables
 class excel :
     def __init__( self , path: str ) -> None:
-        self.wb = load_workbook( path )
+        self.wb = load_workbook( path , data_only = True)
         self.ws = self.wb.active
         pass
 
