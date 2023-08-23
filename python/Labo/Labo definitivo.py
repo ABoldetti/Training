@@ -14,7 +14,7 @@ import Excel_plugin as xlsx
 
 
 class labo:
-    def __init__(self, path: str):
+    def __init__(self, path: str , dir: str):
         self.path = path
         # self.round = int( input( "Quante cifre significative si vogliono avere nei risultati? \t" ) )
         self.round = 3
@@ -32,8 +32,8 @@ class labo:
         
 
         #modifica del path per salvare le foto
-        self.dir_name = '/Users/andreaboldetti/Documents/Foto_python'
-        plt.rcParams["savefig.directory"] = os.chdir ( os.path.dirname( self.dir_name ) )
+        self.dir_name = dir
+        # plt.rcParams["savefig.directory"] = os.chdir ( os.path.dirname( self.dir_name ) )
         pass
 
     def data_analysis (self) :
@@ -223,7 +223,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' )
+    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' , '/Users/andreaboldetti/Documents/Foto_python')
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
