@@ -1,7 +1,7 @@
 import numpy as np
 
-#in output viene ritornata un dizionario contenente in ordine (A, sA, B, sB)
 
+#in output viene ritornata un dizionario contenente in ordine (A, sA, B, sB, sAB)
 class interpolazione:
     def __init__(self, x: np.array, y: np.array, sY):
         self.x = x
@@ -41,17 +41,15 @@ class interpolazione:
         return {"A value" : A, "A error" : sA, "B value": B, "B error": sB, "covariant": sAB}
     def Selezione(self) ->dict:
         if self.a :
-            if int ( input("inserire 1 per intersezione nell'origine, 0 per nessun vincolo\t") ):
-               return self.LinOrigine()
-            else:
-               return self.Lineare()
-        else:
-            return self.Pesata()
+            a = self.Lineare()
+            if a.get("B value")/a.get("A value") < (1/1000) : return self.LinOrigine()
+            else:                                             return a
+        else:     return self.Pesata()
 
 
 if __name__ == '__main__':
     x=np.array([1,2,3,4,5,6])
-    y=np.array([0.1,0.2,0.3,0.4,0.5,0.6])
+    y=np.array([0.3,0.4,0.4,0.5,0.5,0.7])
     # sy=np.array([0.1,0.3,0.2,0.1,0.2,0.3])
     sy=0.1
     a=interpolazione(x,y,sy)

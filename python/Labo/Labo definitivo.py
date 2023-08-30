@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import os
 
 
+
 # file secondari
 import Interpolazione as i
 import Excel_plugin as xlsx
@@ -33,7 +34,7 @@ class labo:
 
         #modifica del path per salvare le foto
         self.dir_name = dir
-        # plt.rcParams["savefig.directory"] = os.chdir ( os.path.dirname( self.dir_name ) )
+        plt.rcParams["savefig.directory"] = os.chdir ( os.path.dirname( self.dir_name ) )
         pass
 
     def data_analysis (self) :

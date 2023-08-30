@@ -23,7 +23,8 @@ class excel :
         e = h [ slice ( 6 , len( h ) -1 ) ]
         return e.split ( ":" )
 
-    # function that gets the coordinates divided in list (First column, first row, last column, last row)
+    # function that gets the coordinates divided in list (First column, first row, last column, last row) and returns a DataFrame 
+    # containing all the data
     def accumulating_data ( self , coordinates :list ) ->  pd.DataFrame:
         ausy = list()
         df = pd.DataFrame(ausy)
@@ -48,6 +49,11 @@ class excel :
             a.append( char )
             a.append( n )
         return a
+    
+    def choosing_analyisis( self , coordinates : list) -> str :
+        c = 0
+
+
     # function to elaborate the coordinates divided in a list after passing through "getting_coordinates"
     def elaborating_coordinates( self , coordinates: list ):
         return [ coordinates[ 0 ] , coordinates[ len(coordinates)-1 ] + 2 ]
@@ -56,7 +62,7 @@ class excel :
     def rolling_table ( self , n: str) -> dict :
         # for table in self.ws.tables.values:
         coordinates = self.getting_coordinates( self.table( n ) )
-        return {"data": self.accumulating_data( coordinates ), "coordinates": self.elaborating_coordinates(coordinates)}
+        return {"data": self.accumulating_data( coordinates ), "coordinates": self.elaborating_coordinates(coordinates), "table": 0}
 
 
 
