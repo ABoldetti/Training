@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pp
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
 import os
 
 
@@ -31,10 +32,9 @@ class labo:
             self.wb = xlsx.excel( path )
             self.count = 0
         
-
+        print( dir )
         #modifica del path per salvare le foto
-        self.dir_name = dir
-        plt.rcParams["savefig.directory"] = os.chdir ( os.path.dirname( self.dir_name ) )
+        rcParams["savefig.directory"] = dir
         pass
 
     def data_analysis (self) :
@@ -47,6 +47,7 @@ class labo:
                     
                 elif self.n_col ==3 :
                     self.three_column()
+                else: print( "wrong csv format" )
             else :
                 for table in self.wb.ws.tables.values() :
                     self.count += 1
@@ -224,15 +225,16 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/trial.xlsx' , '/Users/andreaboldetti/Documents/Foto_python')
+    a=labo( r'C:\Users\Utente\OneDrive\Documenti\GitHub\My_first_Repository\Trial.xlsx' , r'C:\Users\Utente\OneDrive\Documenti\Foto_python')
+    a.data_analysis()
+
     # x = np.linspace(0,5,6)
     # y = np.array([0.1, 0.3, 0.6, 0.7,0.9, 1.3])
     # sy=0.1
     # b = i.interpolazione( x ,y , sy )
     # c = b.Lineare()
-    # #a.linear_regression( x , y , sy, c.get("A value") , c.get("B value") )
+    # a.linear_regression( x , y , sy, c.get("A value") , c.get("B value") )
     # a.gaussian(x)
-    a.data_analysis()
     # a = np.array([ 0.1,0.4,0.6,0.4,0.5,0.4,0.3,0.5,0.8,0.2,0.4])
     # print(  np.sum(( np.mean(a) - a )**2)/(np.size(a)-1)) 
     # print( stdev( a ))
