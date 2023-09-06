@@ -13,7 +13,7 @@ import Excel_plugin as xlsx
 #come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
 
 #la funzione 'gauss' ha problemi con la formula della gaussiana, la fa troppo schiacciata
-
+# la seconda stringa per creare l'oggetto è inutile
 
 class labo:
     def __init__(self, path: str , dir: str):
@@ -32,9 +32,9 @@ class labo:
             self.wb = xlsx.excel( path )
             self.count = 0
         
-        print( dir )
-        #modifica del path per salvare le foto
-        rcParams["savefig.directory"] = dir
+        # print( dir )
+        # modifica del path per salvare le foto
+        # rcParams["savefig.directory"] = dir
         pass
 
     def data_analysis (self) :
