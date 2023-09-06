@@ -1,2 +1,4 @@
-import ctk
+import customtkinter
+
+a = customtkinter.CTk()
 
