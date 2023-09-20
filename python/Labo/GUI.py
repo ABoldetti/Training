@@ -1,27 +1,17 @@
-#GUI
-from tkinter import *
+from customtkinter import *
 
-def dell():
-    text=Label(window,text="peppo to you, you fellow passenger", fg="Lightgrey", bg="Lightgrey", font=("helvetica",10))
-    text.grid(row=1, column=0)
+class Root (CTk):
+    def __init__(self):
+        super().__init__()
 
-def get_input():
-    input_value=entry.get()
-    print(input_value)
+        self.geometry("600x800")
+        self.title("Mainpage")
+        mainpage = Mainpage( self )
 
-window=Tk()
-button=Button(text="peppo",command=get_input, bg="Lightgrey")
-button.pack(side=LEFT)
+class Mainpage ( Root ):
+    def __init__( self , master ):
+        super().__init__()
+        
 
-entry=Entry(window)
-entry.pack()
-
-
-
-window.title("Gesù")
-window.geometry("500x300")
-
-window.configure(bg='lightgrey')
-
-mainloop()
-
+root = Root()
+root.mainloop()
