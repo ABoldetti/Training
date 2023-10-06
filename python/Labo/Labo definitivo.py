@@ -225,7 +225,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( r'C:\Users\Utente\OneDrive\Documenti\GitHub\My_first_Repository\Trial.xlsx' , r'C:\Users\Utente\OneDrive\Documenti\Foto_python')
+    a=labo( '/Users/andreaboldetti/Documents/GitHub/My_first_Repository/python/data.csv' , 0)
     a.data_analysis()
 
     # x = np.linspace(0,5,6)
