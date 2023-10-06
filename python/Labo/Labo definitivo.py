@@ -10,9 +10,9 @@ import os
 import Interpolazione as i
 import Excel_plugin as xlsx
 
-#come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
+# come input della classe inserire il percorso del file csv, poi eseguire il la funzione data analysis
 
-#la funzione 'gauss' ha problemi con la formula della gaussiana, la fa troppo schiacciata
+# la funzione 'gauss' ha problemi con la formula della gaussiana, la fa troppo schiacciata
 # la seconda stringa per creare l'oggetto è inutile
 
 class labo:
@@ -23,18 +23,15 @@ class labo:
         ausy = path.split(".")
         c = self.path.split("/")
         self.name = c[ len(c)-1 ]
+        self.dir = dir
         if ausy[len(ausy)-1] == 'csv':
             self.csv = True
             self.data=pp.read_csv( path )
             self.n_col=len(self.data.columns)
         elif ausy[len(ausy)-1] == 'xlsx':
             self.csv = False
-            self.wb = xlsx.excel( path )
-            self.count = 0
-        
-        # print( dir )
-        # modifica del path per salvare le foto
-        # rcParams["savefig.directory"] = dir
+            self.wb = xlsx.excel( path , True)
+            self.table = 0
         pass
 
     def data_analysis (self) :
@@ -49,20 +46,22 @@ class labo:
                     self.three_column()
                 else: print( "wrong csv format" )
             else :
-                for table in self.wb.ws.tables.values() :
-                    self.count += 1
-                    ausy = self.wb.rolling_table( str( table ) )
-                    self.data = ausy.get( "data" )
-                    self.coordinates = ausy.get( "coordinates" )
-                    self.n_col=len( self.data.columns )
-                    if self.n_col == 1 :
-                        self.one_column()
-                        
-                    elif self.n_col ==2 :
-                        self.two_column()
-                        
-                    elif self.n_col ==3 :
-                        self.three_column()
+                for self.j in self.wb.wb:
+                    
+                    for tables in self.j.tables.values() :
+                        self.table += 1
+                        ausy = self.wb.rolling_table( str( tables ) )
+                        self.data = ausy.get( "data" )
+                        self.coordinates = ausy.get( "coordinates" )
+                        self.n_col=len( self.data.columns )
+                        if self.n_col == 1 :
+                            self.one_column()
+                            
+                        elif self.n_col ==2 :
+                            self.two_column()
+                            
+                        elif self.n_col ==3 :
+                            self.three_column()
 
 
 
@@ -79,7 +78,7 @@ class labo:
             string = f"$ \chi: {round(chi,self.round)} , media: {round(np.mean(x),self.round)}$"
             print( string )
             plt.show()
-            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.dir}{self.name}_{self.j.title}_Tabella{self.table}.jpg")
             plt.clf()
 
         else :
@@ -92,7 +91,7 @@ class labo:
             self.wb.ws[f"{chr(letter+1)}{number+1}"] = round( chi , self.round)
             self.wb.ws[f"{chr(letter)}{number+2}"] = "media :"
             self.wb.ws[f"{chr(letter+1)}{number+2}"] = round(np.mean(x),self.round)
-            plt.savefig( f"{self.name} Tabella{self.count}.jpg" )
+            plt.savefig(f"{self.dir}{self.name}_{self.j.title}_Tabella{self.table}.jpg")
             plt.clf()
             # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
@@ -116,7 +115,7 @@ class labo:
                     $equazione: ({round(A,self.round)}\pm{round(sA,self.round)})x + ({round(B,self.round)}\pm{round(sB,self.round)})$"""
             print( string )
             plt.show()
-            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.dir}{self.name}_{self.j.title}_Tabella{self.table}.jpg")
             plt.clf()
         else :
             letter = ord(self.coordinates[0])
@@ -130,7 +129,7 @@ class labo:
             self.wb.ws[f"{chr(letter)}{number+3}"] = "B:"
             self.wb.ws[f"{chr(letter+1)}{number+3}"] = f"{round( B , self.round)}" + " + " + f"{round( sB , self.round)}"
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.dir}{self.name}_{self.j.title}_Tabella{self.table}.jpg")
             plt.clf()
             # self.wb.ws.add_image( f"{self.name} Tabella{self.count}.jpg" , anchor=f"{chr(letter+4)}{number}" )
             self.wb.wb.save(self.path)
@@ -158,7 +157,7 @@ class labo:
                 $\sigma_AB :{sAB}$"""
             print( string )
             plt.show()
-            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.dir}{self.name}_{self.j.title}_Tabella{self.table}.jpg")
             plt.clf()
         else :
             letter = ord(self.coordinates[0])
@@ -173,20 +172,21 @@ class labo:
             self.wb.ws[f"{chr(letter+1)}{number+3}"] = f"{round( B , self.round)}" + " + " + f"{round( sB , self.round)}"
             self.wb.ws[f"{chr(letter)}{number+4}"] = "Covarianza:"
             self.wb.ws[f"{chr(letter+1)}{number+4}"] = round( sAB , self.round)
+
             #salvataggio del grafico sottoforma jpg e caricamento del file jpg nell'excel
-            plt.savefig(f"{self.name} Tabella{self.count}.jpg")
+            plt.savefig(f"{self.dir}{self.name}_{self.j.title}_Tabella{self.table}.jpg")
             plt.clf()
-            # self.wb.ws.add_image(f"{self.nome} Tabella{self.count}.jpg" , f"{chr(letter+4)}{number}")
+            # self.wb.i.add_image(f"{self.name} {self.i.title} Tabella{self.table}.jpg" , f"{chr(letter+4)}{number}")
             self.wb.wb.save(self.path)
 
 
 # Funzioni per i grafici di matplotlib
-    def gaussian( self , vec: np.array ) :
+    def gaussian( self , x: np.array ) :
 
         plt.xlabel( self.data.columns[0] )
-        plt.hist( vec , bins= int( np.size( vec )/stdev(vec) ) , density = True)
-        span = np.linspace( min(vec), max(vec))
-        plt.plot( span , gauss( span , stdev(vec) ))
+        plt.hist( x , bins= int( np.size( x )/stdev(x) ) , density = True)
+        span = np.linspace( min(x), max(x))
+        plt.plot( span , gauss( span , stdev(x) ))
 
         
 
@@ -225,7 +225,7 @@ def line ( x: np.array , A: float , B: float ) -> np.array:
     return A*x + B
     
 if __name__ == '__main__' :
-    a=labo( r'C:\Users\Utente\OneDrive\Documenti\GitHub\My_first_Repository\Trial.xlsx' , r'C:\Users\Utente\OneDrive\Documenti\Foto_python')
+    a=labo( r'C:\Users\Utente\OneDrive\Documenti\GitHub\My_first_Repository\Trial.xlsx' , r'C:/Users/Utente/OneDrive/Documenti/Foto_python/' )
     a.data_analysis()
 
     # x = np.linspace(0,5,6)

@@ -6,10 +6,16 @@ import pandas as pd
 # class to take the data from an excel, to use it input the path of the excel file and use rolling_tables
 # if the table is larger than 3 columns, it detect wether there is an 's' or an 'f' over the table to use them as 'start' and 'finish'
 class excel :
-    def __init__( self , path: str ) -> None:
+    def __init__( self , path: str , table: bool) -> None:
         self.wb = load_workbook( path , data_only = True )
         self.ws = self.wb.active
         pass
+    # function to call to start to get the values, if you wanna use it alone, use the for cicle and substitute n with table
+    def rolling_table ( self , n: str) -> dict :
+        # for table in self.ws.tables.values:
+        coordinates =self.mod_table( self.getting_coordinates( self.table( n ) ) )
+        return {"data": self.accumulating_data( coordinates ), "coordinates": self.elaborating_coordinates(coordinates) }
+    
 
     # function that work on that mess of Dict.value of ws.tables.values() and get the coordinates
     def table ( self , data: str) -> list:
@@ -63,7 +69,7 @@ class excel :
         if n_col > 3: return self.mod_table( coord )
         else : return coord
     
-    # function that uses the cells imediately over the table to try to reduce it
+    # function that uses the cells imediately over the table to try to reduce it to a table of len 3 or less
     def mod_table( self , coord ):
         for i in range ( ord( coord[0] ) , ord( coord[2] ) ):
             if self.ws[ f"{chr(i)}{coord[1]-1}"].value == 's' : coord[0] = chr( i )
@@ -79,11 +85,7 @@ class excel :
     def elaborating_coordinates( self , coordinates: list ):
         return [ coordinates[ 0 ] , coordinates[ len(coordinates)-1 ] + 2 ]
 
-    # function to call to start to get the values, if you wanna use it alone, use the for cicle and substitute n with table
-    def rolling_table ( self , n: str) -> dict :
-        # for table in self.ws.tables.values:
-        coordinates = self.getting_coordinates( self.table( n ) )
-        return {"data": self.accumulating_data( coordinates ), "coordinates": self.elaborating_coordinates(coordinates) }
+
 
 
 
