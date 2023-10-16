@@ -188,8 +188,6 @@ class labo:
         span = np.linspace( min(vec), max(vec))
         plt.plot( span , gauss( span , stdev(vec) ))
 
-        
-
     def linear_regression( self , x: np.array , y: np.array, sy: float, A: float, B: float ):
 
         plt.xlabel( self.data.columns[0] )
