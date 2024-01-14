@@ -22,7 +22,7 @@ class stats:
         plt.hist( self.data , bins= int(np.ceil( 1 + 3.322 * np.log(len(self.data)))) , density = True)
         plt.show()
     def stats(self):
-        print(f""" MEAN: \t {self.mean()}
+        print(f"""MEAN: \t {self.mean()}
 STANDARD DEV: \t {self.stdev()}
 SKEWNESS: \t {self.skewness()}
 KURTOSIS: \t {self.kurtosis()}""")
@@ -31,7 +31,7 @@ KURTOSIS: \t {self.kurtosis()}""")
 
 if __name__ == '__main__':
     data = []
-    for i in range(1000000):
+    for i in range(10000):
         x,y = np.random.normal( 0 , 1 , 2)
         if x>y :
             data.append(x)
