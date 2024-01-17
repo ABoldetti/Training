@@ -12,8 +12,8 @@ def Dim(n:int):
     a = []
     b = []
     for i in range(1 , n+1):
-        a.append(f"""q{i}""")
-        b.append(f"""p{i}""")
+        a.append(f"q{i}")
+        b.append(f"p{i}")
     stringa = ' '.join( a )
     stringb = ' '.join( b )
     a = symbols(stringa)
