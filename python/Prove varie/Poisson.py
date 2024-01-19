@@ -22,8 +22,8 @@ def Dim(n:int):
 
 
 if __name__ == '__main__' :
-    f = 'q1' 
-    g = 'p1-2*q2'
+    f = 'q1*q2' 
+    g = '(p2-p1)/(q1-q2)'
     n = 2
     q,p=Dim(n)
     print(PoissonBrakets(f,g,q,p))
