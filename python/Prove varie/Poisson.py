@@ -22,8 +22,10 @@ def Dim(n:int):
 
 
 if __name__ == '__main__' :
+    #inserire funzioni qui in notazione di python. exp, sin, cos ecc. funzionano 
     f = 'q1' 
     g = 'p1-2*q2'
+    #modificare n in maniera coerente con le dimensioni delle funzioni
     n = 2
     q,p=Dim(n)
     print(PoissonBrakets(f,g,q,p))
