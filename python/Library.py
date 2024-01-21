@@ -2,13 +2,14 @@
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+from scipy.stats import norm , expon
 
 
-class stats:
+class Stats:
     def __init__(self, data: list) -> None:
         self.data = data
 
-        #statistical function all calculated at the start of the function
+        #class containing all the main statistical functions
         
         self.mean = float(sum(self.data))/len(self.data)
         self.variance = sum( map( (lambda x : (x-self.mean)**2) , self.data)) / (len(self.data)-1)
@@ -34,7 +35,11 @@ KURTOSIS: \t {self.kurtosis}""")
         
 class myrand:
     def __init__(self) -> None:
+        
+        # class containing all the principal, non-banal function to generate pseudo random number following certain conditions
+        
         pass
+
     def TAC( f ,xmax , xmin , ymax , ymin  , N = 1000 , *args , **kwargs):
         vec = []
         while ( len(vec)<N ):
@@ -64,12 +69,53 @@ class myrand:
                 n+=1
         return [ A*n/N , (A/N)*(n/N)*(1-(n/N))]
     
-    def Montecarlo(  f , xmax , xmin , ymax , ymin , N=1000 , *args , **kwargs ):
-        return 0
+    def montecarlo(  f , xmax , xmin ,  N=1000 , *args , **kwargs ):
+        mu = np.mean( f( np.linspace(xmin , xmax , N) , *args , **kwargs) )
+        var = np.std( f( np.linspace(xmin , xmax , N) , *args , **kwargs) )
+        return (xmax-xmin)*mu , abs(var)/np.sqrt(N)
+    
+    def poisson( N:int = 1000, xmin:float = 0 ,  M:int  = 1000 , la:float = 20 ):
+        if xmin < 0:
+            print( "ERROR" )
+            return 0 
+        else:
+            data = []
+            xmax = xmin+(la*N)
+            exp = pdfs.exp
+            a = myrand.TAC( exp , xmax , xmin , exp(0) , exp(xmin) , M )
+            for i in range( xmin , xmax , la):
+                n = 0
+                for j in a:
+                    if i < j < i+la:
+                        n+=1
+                data.append(n)
+            return data
+
+
+class pdfs:
+    def __init__(self) -> None:
+        
+        #class containing some pdfs and cdfs, the func variable is a bool variable that makes the function switch between pdfs and cdfs
+
+        pass
+    def gauss( x , mu=0 , sigma=1 , n=1 , func=True) :
+        if func:
+            return n*norm.pdf( x , loc=mu , scale=sigma)
+        else :
+            return n*norm.cdf( x , loc=mu , scale = sigma)
+    
+    def exp ( x , mu = 0 ,tau = 1 , n = 1, func = True):
+        if func:
+            return n*expon.pdf( x , loc = mu , scale = tau)
+        else :
+            return n*expon.cdf( x , loc = mu , scale = tau)
+    
+
 
 
 
 if __name__ == '__main__':
-    plt.hist(myrand.CLT( 1000 , 1000 , 4 , 0.7))
+    plt.hist(myrand.poisson())
+    # plt.plot ( np.linspace(-10 , 10 , 1000) , pdfs.exp(np.linspace(-10 , 10 , 1000) , 0))
+    # plt.plot ( np.ones(100) , np.linspace( -2 , 2 , 100))
     plt.show()
-
