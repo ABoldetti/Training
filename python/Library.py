@@ -83,9 +83,11 @@ class myrand:
             xmax = xmin+(la*N)
             exp = pdfs.exp
             a = myrand.TAC( exp , xmax , xmin , exp(0) , exp(xmin) , M )
+            print('diocane')
             for i in range( xmin , xmax , la):
                 n = 0
                 for j in a:
+                    print( j , i )
                     if i < j < i+la:
                         n+=1
                 data.append(n)
