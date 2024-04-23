@@ -1,0 +1,19 @@
+namespace sono come una sottocartella delle classi, puoi nominare diverse classi sotto uno stesso namespace e
+usare quello per evitare ambiguità
+
+Le classi funzionano con 
+
+class Peppo{
+    public/private;
+
+    variabili
+
+
+        RICORDATI IL TIPO DELLE FUNZIONI
+    Peppo(){
+        stesso significato di __init__ in python
+    }
+    funzioni(){
+
+    }
+};          <--- Il punto e virgola
