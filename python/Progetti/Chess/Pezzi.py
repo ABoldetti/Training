@@ -186,6 +186,9 @@ class Pawn:
                 print( ValueError , 'move is uncompatible')
                 return 0
 
+
+
+
 def freespace( pos1 , pos2 ):
 
     pass
@@ -225,3 +228,6 @@ def side( colour: bool ) -> dict:
         return { 'bK': K , 'bQ' : Q , 'bB1' : B1 , 'bB2' : B2 , 'bN1' : N1 , 'bN2' : N2 , 'bR1' : R1 , 'bR2' : R2 , 'wpawns':pawn}
     else:
         return { 'wK': K , 'wQ' : Q , 'wB1' : B1 , 'wB2' : B2 , 'wN1' : N1 , 'wN2' : N2 , 'wR1' : R1 , 'wR2' : R2 , 'wpawns':pawn}
+    
+def edit( colour ):
+    pass

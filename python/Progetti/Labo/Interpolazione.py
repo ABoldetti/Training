@@ -14,13 +14,22 @@ class interpolazione:
         pass
 
     # function that detects which interpolation to use, if you want more accurate data, lower the fraction between A and B
-    def Selezione(self) ->dict:
-        if self.a :
+    def Selezione(self) -> dict:
+        """
+        This method selects the best interpolation method based on the given conditions.
+
+        Returns:
+            dict: A dictionary containing the interpolation method and its corresponding values.
+        """
+        if self.a:
             a = self.Lineare()
             # this is an automatic way to detect whether the best interpolation to use is through origin or not
-            if a.get("B value")/a.get("A value") < (1/1000) : return self.LinOrigine()
-            else:                                             return a
-        else:     return self.Pesata()
+            if a.get("B value") / a.get("A value") < (1 / 1000):
+                return self.LinOrigine()
+            else:
+                return a
+        else:
+            return self.Pesata()
 
     # all the functions beneath are just big formulae written using numpy functions
     def Lineare( self ) -> dict:
