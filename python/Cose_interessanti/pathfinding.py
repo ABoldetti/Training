@@ -17,7 +17,7 @@ maze = array([[inf, inf, inf],
                   [inf, 0, inf],
                   [inf, -1, inf]])
 
-
+cristoddio = 0
 
 def step(coord, i):
     if i == 0:
@@ -35,26 +35,32 @@ def step(coord, i):
     return coord
 
 
-def start( i , j ):
+def start( map , i , j,cristoddio ):
     a = i 
     b = j
+    cristoddio+=1
+    print(i,j)
 
     for k in range(4):
             temp = step([a,b] , k)
-            if map[temp[0],temp[1]] != inf: 
-                continue
-            elif map[temp[0],temp[1]]>map[a,b]+1:
-                map[temp[0],temp[1]] = map[a,b]+1
-                start(a,b)
-        
+            print(temp)
+            if temp[0] >0 and temp[0]<len(map) and temp[1] >0 and temp[1]<len(map):
+                if map[temp[0],temp[1]] != inf: 
+                    continue
+                elif map[temp[0],temp[1]]>map[a,b]+1:
+                    map[temp[0],temp[1]] = map[a,b]+1
+                    print('-------------------------------------CHECK 2--------------------------------------------')
+                    map,cristoddio = start(map,a,b,cristoddio)
+    return map,cristoddio
+
 
 def find_path(map):
     for i in range(len(map)):
         for j in range(len(map[i])):
             if map[i,j] == 0:
-                start(i,j)
+                map,cristoddio = start(map ,i,j,0)
+    print(cristoddio)
     return map
 
 if __name__ == '__main__':
     print(find_path(maze))
-    
