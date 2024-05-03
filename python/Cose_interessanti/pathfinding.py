@@ -20,7 +20,6 @@ maze = array([[inf, inf, inf],
                   [inf, 0, inf],
                   [inf, -1, inf]])
 
-cristoddio = 0
 
 def step(coord, i):
     if i == 0:
@@ -37,13 +36,23 @@ def step(coord, i):
         pass
     return coord
 
+def case_check( map , x , y ):
+    for i in range(4):
+        temp = step( [x,y] , i )
+        if temp[0] >= 0 and temp[0]<len(map) and temp[1] >= 0 and temp[1]<len(map):
+            if map[temp[0] , temp[1]] != inf:
+                return True
+    return False
+        
+
 
 def start( map , i , j):
     a = i 
     b = j
     cristoddio = 0
     temp = [0,0]
-    for counter in range(len(map)**2):
+    counter = 0
+    while case_check(map , a,b):
         for k in range(4):
             #print('\t\t\t\t' , temp[0],temp[1] , '\t\t' , a,b)
             temp = step([a,b] , k)
@@ -57,12 +66,16 @@ def start( map , i , j):
         for j in range(4):
             temp = step([a,b] , j)
             print('-------------------------------------CHECK 4--------------------------------------------')
-            print(map, '\t\t' , temp[0],temp[1] , '\t\t' , a,b  , '\t\t' , temp[0] >0 and temp[0]<len(map) and temp[1] >0 , temp[1] >0 and temp[1]<len(map))
+            print(map, '\t\t' , temp[0],temp[1] , '\t\t' , a,b  , '\t\t' , temp[0] >= 0 and temp[0]<len(map) and temp[1] >= 0 , temp[1] >0 and temp[1]<len(map))
             if temp[0] >=0 and temp[0]<len(map) and temp[1] >=0 and temp[1]<len(map) and map[temp[0],temp[1]]>=0:
                 print( '---------------------------------------BAZINGA---------------------------------------------')
-                a = temp[0]
-                b = temp[1]
+                if map[ temp[0] , temp[1]] != inf:
+                    a = temp[0]
+                    b = temp[1]
+                    print( a , b)
+                
                 break
+        counter+=1
     return map,cristoddio
 
 
