@@ -64,16 +64,16 @@ def start( map , i , j):
                     cristoddio+=1
                     map[temp[0],temp[1]] = map[a,b]+1
         for j in range(4):
+            # Il problema è qua
             temp = step([a,b] , j)
             print('-------------------------------------CHECK 4--------------------------------------------')
             print(map, '\t\t' , temp[0],temp[1] , '\t\t' , a,b  , '\t\t' , temp[0] >= 0 and temp[0]<len(map) and temp[1] >= 0 , temp[1] >0 and temp[1]<len(map))
-            if temp[0] >=0 and temp[0]<len(map) and temp[1] >=0 and temp[1]<len(map) and map[temp[0],temp[1]]>=0:
+            if temp[0] >=0 and temp[0]<len(map) and temp[1] >=0 and temp[1]<len(map):
                 print( '---------------------------------------BAZINGA---------------------------------------------')
-                if map[ temp[0] , temp[1]] != inf:
+                if map[temp[0],temp[1]]!=-1 and map[temp[0],temp[1]]> map[ a , b ]+1:
                     a = temp[0]
                     b = temp[1]
                     print( a , b)
-                
                 break
         counter+=1
     return map,cristoddio
@@ -89,3 +89,6 @@ def find_path(map):
 
 if __name__ == '__main__':
     print(find_path(maze))
+
+    #print( case_check(maze , 0 , 0))
+    
