@@ -60,4 +60,5 @@ dkms.conf
 *.xlsx
 
 C&S
-Cpp/exec
+Cpp/execs
+Cpp/libraries
