@@ -1,3 +1,5 @@
+strictmode = true
+
 let a = []
 let mosse = []
 
