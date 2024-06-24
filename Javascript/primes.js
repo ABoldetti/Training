@@ -1,10 +1,10 @@
 function check_prime(n){
     if ( n <=1) return false
-    if ( !n%2 ) return true
+    if ( !(n%2) ) return false
     for ( let i = 2 ; i< parseInt(Math.sqrt(n)) ; i++){
-         if ( !n%i ) return true
+         if ( !(n%i) ) return false
     }
-    return false
+    return true
 }
 
-console.log( check_prime(17897667))
+console.log( check_prime(71))

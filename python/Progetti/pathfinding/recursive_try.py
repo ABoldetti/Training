@@ -1,24 +1,11 @@
-from numpy import ones, array, inf
-
+from numpy import ones, array, inf, arange
+from utilities import *
 '''
 TODO 
 nel for usare come condizione una funzione che controlla se tutti quelli circostanti siano non inf
 fare un'altra funzione che rileva gli inf residui e gli dà il valore minimo vicino, loopare finchè tutti gli inf non se ne sono andati
 '''
 
-map = array([[inf, -1, inf, inf, inf, -1, inf, inf, inf, inf],
-              [inf, 0, inf, -1, inf, -1, inf, -1, inf, inf],
-              [inf, inf, inf, -1, inf, inf, inf, -1, inf, inf],
-              [inf, -1, -1, -1, inf, -1, inf, -1, inf, inf],
-              [inf, inf, inf, inf, inf, -1, inf, -1, inf, inf],
-              [inf, -1, inf, -1, inf, -1, inf, -1, inf, inf],
-              [inf, inf, inf, -1, inf, inf, inf, -1, inf, inf],
-              [inf, -1, -1, -1, inf, -1, inf, -1, 0, inf],
-              [inf, inf, inf, inf, inf, -1, inf, -1, inf, inf],
-              [inf, inf, inf, inf, inf, -1, inf, inf, inf, inf]])
-maze = array([[inf, inf, inf],
-                  [inf, 0, inf],
-                  [inf, -1, inf]])
 
 
 def step(coord, i):
@@ -35,7 +22,6 @@ def step(coord, i):
         coord[1]-=1
         pass
     return coord
-
 def case_check( map , x , y ):
     for i in range(4):
         temp = step( [x,y] , i )
@@ -43,9 +29,6 @@ def case_check( map , x , y ):
             if map[temp[0] , temp[1]] != inf:
                 return True
     return False
-        
-
-
 def start( map , i , j):
     a = i 
     b = j
@@ -77,8 +60,6 @@ def start( map , i , j):
                 break
         counter+=1
     return map,cristoddio
-
-
 def find_path(map):
     for i in range(len(map)):
         for j in range(len(map[i])):
@@ -87,8 +68,7 @@ def find_path(map):
     print(cristoddio)
     return map
 
-if __name__ == '__main__':
-    print(find_path(maze))
 
-    #print( case_check(maze , 0 , 0))
-    
+if __name__ == '__main__':
+    #print(find_path(maze))
+    print( case_check(maze , 0 , 0))
