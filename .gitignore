@@ -59,6 +59,12 @@ dkms.conf
 .vscode
 *.xlsx
 
+# python compilation file
+
+__pycache__
+
+# C++ compilation files
+
 C&S
 Cpp/execs
 Cpp/libraries
