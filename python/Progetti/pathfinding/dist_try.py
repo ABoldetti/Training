@@ -44,6 +44,8 @@ def dist_Y(map, coord_sor, coord_tmp):
             return abs( coord_tmp[1] - i+1)
     return abs( coord_tmp[1] - coord_sor[0]+1)
 
+
+
 def dist( map , coordp , coord_sor):
     coord_tmp = list(coordp)
     dist = 0
