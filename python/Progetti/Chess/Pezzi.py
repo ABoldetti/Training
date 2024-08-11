@@ -10,8 +10,6 @@ pos = ( x , y) = ( column , row ) = ( Letter , Number)
 
 
 class Board:
-
-        
     def __init__(self , std) -> None:
         if std:
             self.white = side( False )
@@ -190,7 +188,9 @@ class Pawn:
 
 
 def freespace( pos1 , pos2 ):
-
+    for i in range( pos1[1] , pos2[1] ):
+        if Board.piece( ( pos1[0] , i ) , pos2 ):
+            return 0
     pass
 
 def check( pos ):
@@ -225,7 +225,7 @@ def side( colour: bool ) -> dict:
     for i in range( 8 ):
         pawn[f'p{i+1}'] = Pawn( colour , i)
     if colour:
-        return { 'bK': K , 'bQ' : Q , 'bB1' : B1 , 'bB2' : B2 , 'bN1' : N1 , 'bN2' : N2 , 'bR1' : R1 , 'bR2' : R2 , 'wpawns':pawn}
+        return { 'bK': K , 'bQ' : Q , 'bB1' : B1 , 'bB2' : B2 , 'bN1' : N1 , 'bN2' : N2 , 'bR1' : R1 , 'bR2' : R2 , 'bpawns':pawn}
     else:
         return { 'wK': K , 'wQ' : Q , 'wB1' : B1 , 'wB2' : B2 , 'wN1' : N1 , 'wN2' : N2 , 'wR1' : R1 , 'wR2' : R2 , 'wpawns':pawn}
     
