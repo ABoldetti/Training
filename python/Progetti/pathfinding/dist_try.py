@@ -5,6 +5,8 @@ from utilities import *
 #//    return a+b
 
 
+
+
 def arange( start , end = None , step = 1):
     if end == None:
         end = start
@@ -43,8 +45,6 @@ def dist_Y(map, coord_sor, coord_tmp):
         if map[coord_tmp[0] , i] == -1:
             return abs( coord_tmp[1] - i+1)
     return abs( coord_tmp[1] - coord_sor[0]+1)
-
-
 
 def dist( map , coordp , coord_sor):
     coord_tmp = list(coordp)
@@ -148,8 +148,7 @@ def pathfind( map ):
 
 if __name__ == '__main__':
 
-
-    print( dist_X( map , (1,0) , (0,0)))
+    print( dist_X( map , (1,1) , (0,0)))
     #print(maze)
     print( pathfind( maze ))
 
