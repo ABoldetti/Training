@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import tabula as tb
 import os
 
-os.chdir('~/file')
+os.chdir('/home/ubolde/Documents/coding/Training/python/Progetti/getfile/file')
 files = os.listdir()
 
 for i in files:
-    df = tb.read_pdf(os.cwd() + i , pages = "all")[0]
+    df = tb.read_pdf(os.getcwd() +'/'+ i , pages = "all")[0]
 
 
 a = df.columns
